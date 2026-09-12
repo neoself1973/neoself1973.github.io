@@ -1,0 +1,521 @@
+@charset "UTF-8";
+/* ============================================================
+   BBB英会話スクール — ランディングページ／CSSアニメーション
+   デザインカンプ：Adobe XD（PC 1400px / SP 375px / ハンバーガーメニュー 375px）
+   ブレークポイント：900px
+   フォント：游ゴシック（カンプ指定。OS 標準フォントのため、
+             ベースラインは環境によって 1〜2px 前後する）
+   内容幅：860px
+   コメントの (y=####) はカンプ上のY座標。
+   ============================================================ */
+
+/* ---------- 1. 変数 ---------- */
+:root {
+  --c-red:      #ff2a2a;   /* 帯・アクセント */
+  --c-btn:      #ff0033;   /* ファーストビューのボタン */
+  --c-btn-dark: #7a051c;   /* ボタンの影 */
+  --c-text:     #333333;
+  --c-white:    #ffffff;
+  --c-gray:     #e8e8e8;   /* 概要・フッターの帯 */
+  --c-bubble:   #e9f1fb;   /* 吹き出し */
+  --c-avatar:   #cccccc;
+
+  --content:  900px;       /* 内側 860px + 左右 padding 20px */
+  --pad-x:    20px;
+  --comp-w:   1400px;      /* カンプ幅 */
+
+  --font: "Yu Gothic Medium", "游ゴシック Medium", YuGothic, "游ゴシック体",
+          "Yu Gothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+          "Noto Sans JP", Meiryo, sans-serif;
+
+  --ls: .1em;              /* カンプの letterSpacing 100 = 0.1em */
+}
+
+/* ---------- 2. リセット ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--c-text);
+  background: var(--c-white);
+  line-height: 1.5;
+  letter-spacing: var(--ls);
+  overflow-wrap: break-word;
+  overflow-x: hidden;
+}
+ul, ol { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: inherit; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.u-vh {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  padding: 10px 16px; background: var(--c-text); color: var(--c-white); font-size: 14px;
+}
+.skip-link:focus { left: 0; }
+:where(a, button):focus-visible { outline: 3px solid #0a58ca; outline-offset: 3px; }
+
+.container { max-width: var(--content); margin-inline: auto; padding-inline: var(--pad-x); }
+
+/* ============================================================
+   3. ヘッダー
+   ロゴ (50,40) 100×56.28 ／ ハンバーガー 100×100 を右上に固定
+   ============================================================ */
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: 100px;
+  pointer-events: none;    /* 帯自体はクリックを拾わない */
+}
+.header > * { pointer-events: auto; }
+
+.logo { position: absolute; left: 50px; top: 40px; }
+.logo__mark { width: 100px; height: 56.28px; color: var(--c-red); }
+
+.burger {
+  position: absolute; right: 0; top: 0;
+  width: 100px; height: 100px;
+  background: var(--c-red);
+}
+.burger__bar {
+  position: absolute; left: 25px;
+  width: 50px; height: 2px;
+  background: var(--c-white);
+  transition: transform .3s ease, opacity .2s ease, top .3s ease;
+}
+.burger__bar:nth-child(1) { top: 35px; }   /* y=36 */
+.burger__bar:nth-child(2) { top: 49px; }   /* y=50 */
+.burger__bar:nth-child(3) { top: 63px; }   /* y=64 */
+
+/* ============================================================
+   4. 全画面メニュー（フェードで表示）
+   ============================================================ */
+.drawer {
+  position: fixed; inset: 0; z-index: 150;
+  display: grid;
+  align-content: start;
+  background: var(--c-red);
+  color: var(--c-white);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.drawer[hidden] { display: none; }
+.drawer.is-open { opacity: 1; }
+
+.drawer__logo { position: absolute; left: 25px; top: 25px; }
+.drawer__logo .logo__mark { color: var(--c-white); }
+
+.drawer__close {
+  position: absolute; right: 25.3px; top: 25px;
+  width: 24.7px; height: 24.7px;               /* × は 24.7 角・線幅2 */
+}
+.drawer__close::before,
+.drawer__close::after {
+  content: ""; position: absolute; left: 0; top: 11.35px;
+  width: 24.7px; height: 2px; background: var(--c-white);
+}
+.drawer__close::before { transform: rotate(45deg); }
+.drawer__close::after  { transform: rotate(-45deg); }
+
+.drawer__nav { margin-top: 110.9px; }          /* 1項目め base y=124 */
+.drawer__list { text-align: center; }
+.drawer__list li { line-height: 16px; }        /* li の strut を行送りに合わせる */
+.drawer__list li + li { margin-top: 20px; }    /* 16px行 + 20px = 36px ピッチ */
+.drawer__list a { display: inline-block; font-size: 16px; line-height: 16px; font-weight: 700; }
+.drawer__cta { margin-top: 55px !important; }  /* base y=268（36px 空ける） */
+
+/* ============================================================
+   5. メインビジュアル
+   画像は x=363〜1400 / y=100〜820。コピーは x=135 で画像に重なる。
+   ============================================================ */
+.hero { position: relative; }
+.hero__inner {
+  position: relative;
+  max-width: var(--comp-w);
+  height: 820px;
+  margin-inline: auto;
+}
+
+/* --- 3枚クロスフェード（1枚 6 秒・合計 18 秒） --- */
+.hero__media {
+  position: absolute;
+  left: 25.9286%;                 /* 363 / 1400 */
+  top: 100px; right: 0;
+  height: 720px;
+  overflow: hidden;
+  background: #d8d8d8;
+}
+.hero__slide {
+  position: absolute; inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: heroFade 18s infinite;
+}
+.hero__slide--1 { background-image: url("../img/mainvisual1.jpg"); animation-delay:  0s; }
+.hero__slide--2 { background-image: url("../img/mainvisual2.jpg"); animation-delay:  6s; }
+.hero__slide--3 { background-image: url("../img/mainvisual3.jpg"); animation-delay: 12s; }
+@keyframes heroFade {
+   0%   { opacity: 0; }
+   6%   { opacity: 1; }
+  33%   { opacity: 1; }
+  39%   { opacity: 0; }
+ 100%   { opacity: 0; }
+}
+
+.hero__copy { position: absolute; left: 9.6429%; top: 369.6px; z-index: 1; }  /* 135 / 1400 */
+.hero__title {
+  font-size: 46px;
+  line-height: 73.6px;
+  font-weight: 700;
+  color: var(--c-text);
+}
+.hero__cta { margin-top: 19.2px; }              /* ボタン上端 y=536 */
+
+/* --- 無料体験はこちら --- */
+.btn-trial {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 479px; height: 54px;
+  border-radius: 10px;
+  background: var(--c-btn);
+  box-shadow: 0 6px 0 var(--c-btn-dark);        /* 下に 6px の影（長方形29） */
+  color: var(--c-white);
+  font-size: 24px;
+  line-height: 24px;
+  transition: transform .25s ease;
+}
+.btn-trial:hover { transform: scale(1.04); }
+.btn-trial__label { display: block; }
+.btn-trial__arrow {
+  position: absolute; right: 30px; top: 50%;
+  width: 11.3px; height: 22.6px;
+  margin-top: -8px;                             /* 中心 y=566.3（ボタン中心+3.3） */
+  overflow: visible;
+}
+
+/* ============================================================
+   6. セクション見出し（36px＋下の短い罫線 100×3px）
+   ============================================================ */
+.sec-title {
+  font-size: 36px;
+  line-height: 36px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--c-text);
+}
+.sec-title::after {
+  content: "";
+  display: block;
+  width: 100px; height: 3px;
+  margin: 16.7px auto 0;                        /* 罫線は見出しの 24px 下（カンプの多数側に統一） */
+  background: currentColor;
+}
+
+/* ============================================================
+   7. BBBが選ばれる理由
+   ============================================================ */
+.reason { padding-top: 122.8px; }               /* 見出し base y=973 */
+.reason__band {
+  margin-top: 82.5px;                           /* 赤帯 y=1081 */
+  padding-block: 80px;                          /* カード1 上端 y=1161 */
+  background: var(--c-red);
+  overflow: hidden;    /* スライドイン前のカードが横スクロールを出さないよう帯の中で切る */
+}
+.reason__list { display: grid; row-gap: 40px; } /* カード2 上端 y=1401 */
+
+.rcard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 50%;                                   /* 700 / 1400 */
+  height: 200px;
+  background: var(--c-white);
+}
+.rcard--left  { border-radius: 0 20px 20px 0; }
+.rcard--right { border-radius: 20px 0 0 20px; margin-left: auto; }
+
+.rcard__icon { flex: none; color: var(--c-text); }
+.rcard--left  .rcard__icon svg { width: 87px; height: 60px; }
+.rcard--right .rcard__icon svg { width: 51px; height: 60px; }
+.rcard__icon svg { fill: currentColor; }
+
+.rcard__title {
+  font-size: 28px; line-height: 28px; font-weight: 700;
+  color: var(--c-red);
+}
+.rcard__text { font-size: 18px; line-height: 18px; margin-top: -0.6px; }
+
+/* --- 左右からスライドイン --- */
+.js-inview { opacity: 0; transition: opacity .8s ease, transform .8s ease; }
+.rcard--left.js-inview  { transform: translateX(-60px); }
+.rcard--right.js-inview { transform: translateX(60px); }
+.js-inview.is-inview { opacity: 1; transform: translateX(0); }
+
+/* ============================================================
+   8. 受講生の声
+   ============================================================ */
+.voices { padding-top: 121.8px; padding-bottom: 119.1px; }  /* 見出し base y=1833 */
+.voices__list { margin-top: 78.5px; display: grid; row-gap: 59.1px; }  /* 1行目 y=1937 */
+
+/* DOM順は [吹き出し, アバター]（SPの表示順＝読み上げ順）。
+   PC は左列にアバターを出すため --left だけ行方向を反転する。 */
+.voice { display: flex; align-items: flex-start; gap: 25px; }
+.voice--left  { flex-direction: row-reverse; justify-content: flex-end; }
+.voice--right { justify-content: flex-end; }
+
+.voice__avatar { flex: none; width: 120px; text-align: center; }
+.avatar { width: 120px; height: 120px; }
+.voice__name { margin-top: 10.9px; font-size: 12px; line-height: 12px; }  /* base y=2078 */
+.voice__role { margin-top: 2px;    font-size: 12px; line-height: 12px; }  /* base y=2092 */
+
+.voice__bubble {
+  position: relative;
+  width: 508px;
+  min-height: 137px;
+  padding: 14.5px 20px;                        /* 本文4行 108 + 上下 14.5 = 137 */
+  border-radius: 15px;
+  background: var(--c-bubble);
+}
+.voice__text { font-size: 16px; line-height: 27px; }
+
+/* 吹き出しの三角（PC は横向き 15×30・上端から 85px） */
+.voice__bubble::before {
+  content: "";
+  position: absolute; top: 85px;
+  width: 15px; height: 30px;
+  background: var(--c-bubble);
+}
+.voice--left  .voice__bubble::before { left: -15px;  clip-path: polygon(0 50%, 100% 0, 100% 100%); }
+.voice--right .voice__bubble::before { right: -15px; clip-path: polygon(100% 50%, 0 0, 0 100%); }
+
+/* --- 小さい状態からふわっと拡大して表示 --- */
+.voice { opacity: 0; transform: scale(.85); transition: opacity .7s ease, transform .7s ease; }
+.voice.is-inview { opacity: 1; transform: scale(1); }
+
+/* ============================================================
+   9. スクールの概要
+   ============================================================ */
+.outline {
+  position: relative;
+  overflow: hidden;                             /* 赤い円を帯の中だけに見せる */
+  background: var(--c-gray);
+  padding-bottom: 60px;                         /* 帯 y=2645〜3499 */
+}
+.outline__deco {
+  position: absolute;
+  width: 314px; height: 314px;                  /* r=157 */
+  border-radius: 50%;
+  background: var(--c-red);
+}
+.outline__deco--1 { left: 0;       top: 0; }
+.outline__deco--2 { left: 50%;     top: 0; }
+.outline__deco--3 { left: 27.571%; top: 386px; }
+.outline__deco--4 { left: 77.571%; top: 386px; }
+.outline__deco--5 { left: 0;       top: 700px; }
+.outline__deco--6 { left: 50%;     top: 700px; }
+
+.outline__body { position: relative; z-index: 1; padding-top: 61.8px; }  /* 見出し base y=2737 */
+.outline__list {
+  margin-top: 78.5px;                           /* カード上端 y=2841 */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 40px;                             /* 410×2 + 40 = 860 */
+  row-gap: 32px;                                /* 283 + 32 = 315 ピッチ */
+}
+.ocard {
+  min-height: 283px;
+  padding: 61.5px 60px 0;                       /* 見出し base = カード上端+85 */
+  border-radius: 20px;
+  background: var(--c-white);
+  text-align: center;
+}
+.ocard__title { font-size: 28px; line-height: 28px; font-weight: 700; }
+.ocard__en    { margin-top: 14.4px; font-size: 18px; line-height: 18px; font-weight: 700; }
+.ocard__text  { margin-top: 26.2px; font-size: 16px; line-height: 27px; text-align: left; }
+
+/* ============================================================
+   10. 無料体験 CTA
+   ============================================================ */
+.cta {
+  position: relative;
+  z-index: 1;                                   /* 赤い円の上に白帯を重ねる */
+  background: var(--c-white);
+  padding-top: 122.1px;                         /* 見出し base y=3648 */
+  padding-bottom: 120px;
+  text-align: center;
+}
+.cta__title { font-size: 32px; line-height: 32px; font-weight: 700; }
+.cta__lead  { margin-top: 7.8px; font-size: 18px; line-height: 18px; }
+.cta__btn   { margin-top: 39.1px; }             /* ボタン上端 y=3718 */
+
+.btn-apply {
+  display: grid; place-items: center;
+  width: 100%; max-width: 860px; height: 58px;
+  margin-inline: auto;
+  border-radius: 40px;
+  background: var(--c-red);
+  color: var(--c-white);
+  font-size: 28px; line-height: 28px; font-weight: 700;
+  transition: transform .25s ease;
+}
+.btn-apply:hover { transform: scale(1.03); }
+
+/* ============================================================
+   11. フッター
+   ============================================================ */
+.footer {
+  position: relative; z-index: 1;
+  padding-top: 60.6px;                          /* 見出し base y=3970 */
+  padding-bottom: 20.4px;
+  background: var(--c-gray);
+}
+.footer__cols { display: grid; grid-template-columns: repeat(4, 1fr); }  /* 215px ピッチ */
+.fcol__head { font-size: 16px; line-height: 16px; font-weight: 700; }
+.fcol__list { margin-top: 10px; padding-left: 10px; }  /* 項目 base y=3996 */
+.fcol__list li { font-size: 16px; line-height: 16px; } /* 行ボックスを行送りに合わせる */
+.fcol__list li + li { margin-top: 3px; }               /* 16px行 + 3px = 19px ピッチ */
+.fcol__list a { display: inline-block; font-size: 16px; line-height: 16px; }
+.fcol__list a:hover { text-decoration: underline; }
+.copyright { margin-top: 60px; font-size: 10px; line-height: 10px; text-align: center; }
+
+/* ============================================================
+   12. SP（〜900px）
+   ============================================================ */
+@media (max-width: 900px) {
+
+  /* --- ヘッダー：ロゴ (25,25) ／ ハンバーガー 75×75 --- */
+  .logo { left: 25px; top: 25px; }
+  .burger { width: 75px; height: 75px; }
+  .burger__bar { left: 20px; width: 35px; }
+  .burger__bar:nth-child(1) { top: 25px; }      /* y=26 */
+  .burger__bar:nth-child(2) { top: 36px; }      /* y=37 */
+  .burger__bar:nth-child(3) { top: 47px; }      /* y=48 */
+
+  /* --- メインビジュアル：画像は全幅 375×300 --- */
+  /* ヘッダー分は padding で確保する（margin だと body から抜けてしまう） */
+  .hero { padding-top: 100px; }
+  .hero__inner { height: auto; }
+  .hero__media {
+    position: relative;
+    left: 0; right: auto; top: 0;
+    width: 100%; height: 300px;                 /* 画像 y=100〜400 */
+  }
+  .container { padding-inline: 16px; }          /* 内容幅 343px @375 */
+  .hero__copy {
+    position: static;
+    padding: 2px 16px 0;                        /* 見出し base y=435 */
+  }
+  .hero__title { font-size: 28px; line-height: 47px; }
+  .hero__cta { margin-top: 2px; }               /* ボタン上端 y=498 */
+  .btn-trial {
+    width: 100%; height: 54px;
+    box-shadow: 0 5px 0 var(--c-btn-dark);      /* SP は 5px */
+  }
+  .btn-trial__arrow { right: 30px; margin-top: -9.6px; }
+
+  /* --- 見出し --- */
+  .sec-title { font-size: 28px; line-height: 28px; }
+  .sec-title::after { width: 80px; margin-top: 17px; }     /* 罫線は見出しの 21px 下 */
+
+  /* --- 選ばれる理由 --- */
+  .reason { padding-top: 86.5px; }              /* 見出し base y=662 */
+  .reason__band { margin-top: 41.5px; padding-block: 40px; }  /* 帯 y=728 / カード y=768 */
+  .reason__list { row-gap: 40px; }              /* カード2 y=927 */
+  .rcard {
+    width: calc(100% - 16px);
+    height: 119px;
+    gap: 30px;
+  }
+  .rcard--left  { border-radius: 0 20px 20px 0; margin-right: auto; }
+  .rcard--right { border-radius: 20px 0 0 20px; margin-left: auto; }
+  .rcard__body  { margin-top: 7px; }            /* カンプは中央より 3.5px 下 */
+  .rcard__title { font-size: 24px; line-height: 24px; }
+  .rcard__text  { font-size: 18px; line-height: 28.8px; margin-top: -5.4px; }
+
+  /* --- 受講生の声：吹き出しの上に、三角は下向き --- */
+  .voices { padding-top: 81.5px; padding-bottom: 79.1px; }  /* 見出し base y=1191 */
+  .voices__list { margin-top: 38.5px; row-gap: 39.1px; }    /* 1行目 y=1254 / 417 ピッチ */
+  .voice, .voice--left, .voice--right {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;                                  /* 吹き出し下端 1445 → アバター 1475 */
+  }
+  .voice__bubble { width: 100%; min-height: 191px; padding: 14.5px 20px; }
+  .voice__bubble::before,
+  .voice--left .voice__bubble::before,
+  .voice--right .voice__bubble::before {
+    left: 50%; right: auto;
+    top: auto; bottom: -15px;
+    width: 30px; height: 15px;
+    margin-left: -15px;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+  }
+
+  /* --- スクールの概要：1列・赤い円は2つ --- */
+  .outline { padding-bottom: 63px; }
+  .outline__deco--1 { left: 0; top: 0; }        /* 円 (157,2702) */
+  .outline__deco--2,
+  .outline__deco--4,
+  .outline__deco--6 { display: none; }
+  .outline__deco--3 { left: 0; top: 700px; }    /* 円 (157,3402) */
+  .outline__deco--5 { display: none; }
+  .outline__body { padding-top: 61.5px; }       /* 見出し base y=2630 */
+  .outline__list {
+    margin-top: 38.5px;                         /* カード y=2693 */
+    grid-template-columns: 1fr;
+    row-gap: 32px;                              /* 216 + 32 = 248 ピッチ */
+  }
+  /* カンプの左右余白は 33px だが、本文16文字（16px＋0.1em＝281.6px）が
+     277px に収まらない。余白だけ 30px にして、字送りと3行構成はカンプどおりに保つ。 */
+  .ocard { min-height: 216px; padding: 30.8px 30px 0; }
+  .ocard__title { font-size: 24px; line-height: 24px; }
+  .ocard__en    { margin-top: 14.8px; font-size: 16px; line-height: 16px; }
+  .ocard__text  { margin-top: 25.5px; }
+
+  /* --- CTA --- */
+  .cta { padding-top: 74.6px; padding-bottom: 80px; }   /* 見出し base y=3818 */
+  .cta__title { font-size: 24px; line-height: 38.4px; }
+  .cta__lead  { margin-top: -7.7px; font-size: 16px; line-height: 25.6px; }
+  .cta__btn   { margin-top: 35px; }
+  .btn-apply  { height: 54px; font-size: 24px; line-height: 24px; }
+
+  /* --- フッター：2列×2段 --- */
+  .footer { padding-top: 60.4px; padding-bottom: 20.4px; }
+  .footer__cols { grid-template-columns: repeat(2, 1fr); row-gap: 29.5px; }
+  .fcol__head { font-size: 15px; line-height: 15px; }
+  .fcol__list { margin-top: 10.5px; }
+  .fcol__list li { font-size: 12px; line-height: 12px; }   /* 行ボックスを 12px に揃える */
+  .fcol__list li + li { margin-top: 3px; }
+  .fcol__list a { font-size: 12px; line-height: 12px; }
+  .copyright { margin-top: 60.7px; }
+}
+
+/* ---- 360px 未満のはみ出し防止 ---- */
+@media (max-width: 359px) {
+  .hero__title { font-size: 24px; line-height: 40px; }
+  .btn-trial { font-size: 20px; }
+  .cta__title { font-size: 21px; }
+}
+
+/* ---- アニメーションを減らす設定 ---- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero__slide { animation: none; }
+  .hero__slide--1 { opacity: 1; }
+  .js-inview, .voice { opacity: 1 !important; transform: none !important; transition: none; }
+  .btn-trial:hover, .btn-apply:hover { transform: none; }
+}

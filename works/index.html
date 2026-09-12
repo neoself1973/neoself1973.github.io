@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コーディング練習制作 3本｜今野徳仁</title>
+<meta name="description" content="Codejump 配布のデザインカンプ（Adobe XD）から実装した練習制作物。コーポレートサイト、WordPressオリジナルテーマ、ランディングページ。">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171a; --sub:#5a6570; --line:#e2e6ea; --bg:#fbfbfc;
+    --accent:#1b3b6f; --card:#ffffff;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+    color:var(--ink); background:var(--bg);
+    line-height:1.8; -webkit-text-size-adjust:100%;
+  }
+  a{color:inherit}
+  img{display:block;max-width:100%;height:auto}
+  .wrap{max-width:920px;margin-inline:auto;padding:0 20px}
+
+  header{padding-block:72px 44px;border-bottom:1px solid var(--line);background:var(--card)}
+  .eyebrow{
+    margin:0 0 14px; font-size:12px; font-weight:500; letter-spacing:.14em;
+    color:var(--accent); text-transform:uppercase;
+  }
+  h1{margin:0 0 18px;font-size:clamp(24px,4.4vw,34px);line-height:1.4;font-weight:700}
+  .lede{margin:0;max-width:62ch;font-size:15px;color:var(--sub)}
+
+  .notice{
+    margin:28px 0 0;padding:16px 18px;
+    border-left:3px solid var(--accent);background:#f2f5fa;
+    font-size:14px;color:#2c3b52;
+  }
+  .notice strong{font-weight:700}
+
+  main{padding-block:52px 72px}
+  .items{display:grid;gap:26px;margin:0;padding:0;list-style:none}
+  .item{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:26px 24px;
+  }
+  .item h2{margin:0 0 6px;font-size:19px;line-height:1.5;font-weight:700}
+  .item__src{margin:0 0 14px;font-size:12px;color:var(--sub)}
+  .item p{margin:0 0 16px;font-size:14px;color:#3b4652}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px;padding:0;list-style:none}
+  .tags li{
+    font-size:11.5px;line-height:1;padding:6px 10px;border-radius:99px;
+    background:#eef1f5;color:#4a5663;
+  }
+  .actions{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{
+    display:inline-block;padding:10px 20px;border-radius:6px;
+    font-size:14px;font-weight:500;text-decoration:none;
+    background:var(--accent);color:#fff;transition:opacity .2s;
+  }
+  .btn--ghost{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  .btn:hover{opacity:.82}
+
+  .check{margin-top:52px;padding-top:36px;border-top:1px solid var(--line)}
+  .check h2{margin:0 0 14px;font-size:17px;font-weight:700}
+  .check p{margin:0 0 16px;font-size:14px;color:#3b4652;max-width:64ch}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  caption{text-align:left;font-size:12px;color:var(--sub);padding-bottom:8px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{font-weight:500;color:var(--sub);white-space:nowrap}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  footer{padding-block:28px 56px;font-size:13px;color:var(--sub)}
+  footer a{color:var(--accent)}
+
+  @media (min-width:700px){
+    .items{grid-template-columns:repeat(2,1fr)}
+    .item:first-child{grid-column:1 / -1}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Coding practice</p>
+    <h1>デザインカンプからの実装 3本</h1>
+    <p class="lede">Adobe XD のデザインカンプを読み、数値どおりに HTML / CSS / JavaScript と
+    WordPress オリジナルテーマに落とした練習制作物です。座標は目分量で寄せず、
+    XD ファイルから取り出した実測値と突き合わせて検証しています。</p>
+    <p class="notice"><strong>これはクライアント案件ではありません。</strong>
+    デザインカンプは <a href="https://code-jump.com/xd-public/">Codejump</a> の配布物で、
+    「練習で制作したサイトは自由にポートフォリオへ掲載してOK」と規約に明記されているものを使っています。
+    カンプに入っていた写真は配布元が出所を明示していないため、グレーのプレースホルダーに差し替えています。</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <ul class="items">
+
+      <li class="item">
+        <h2>明るいHOUSE｜コーポレートサイト（固定サイドメニュー）</h2>
+        <p class="item__src">元カンプ：Codejump 上級編 ／ PC 1400px・SP 375px ／ ブレークポイント 960px</p>
+        <p>300px の固定サイドメニュー、スクロールしても残る固定背景の上を半透明のセクションが流れる構成、
+        画像を使わず CSS だけで組んだ矢印型のフローチャート。960px 以下では全画面ドロワーに切り替わります。</p>
+        <ul class="tags">
+          <li>HTML</li><li>CSS Grid</li><li>clip-path</li><li>position: fixed</li>
+          <li>JavaScript（素）</li><li>レスポンシブ</li><li>アクセシビリティ対応</li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="corporate3/">サイトを見る</a>
+        </div>
+      </li>
+
+      <li class="item">
+        <h2>同じサイトの WordPress オリジナルテーマ</h2>
+        <p class="item__src">テーマ名：Akarui HOUSE ／ 既成テーマの改変ではなくゼロから作成</p>
+        <p>上の静的サイトをテンプレート化したもの。建築事例と家づくりの流れをカスタム投稿タイプにして、
+        管理画面から並び替え・写真の差し替えができます。出力は静的版と同じ座標になることを確認済み。</p>
+        <ul class="tags">
+          <li>WordPress</li><li>オリジナルテーマ</li><li>カスタム投稿タイプ×2</li>
+          <li>カスタマイザー</li><li>テンプレート階層</li><li>エスケープ処理</li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn--ghost" href="akarui-house.zip">テーマを見る（ZIP）</a>
+        </div>
+      </li>
+
+      <li class="item">
+        <h2>BBB英会話スクール｜ランディングページ</h2>
+        <p class="item__src">元カンプ：Codejump 応用編 ／ PC 1400px・SP 375px ／ ブレークポイント 900px</p>
+        <p>メインビジュアル3枚のクロスフェード、スクロールで左右から入るカード、
+        ふわっと拡大して出る受講生の声、CSS で作った吹き出し（PC は横向き・SP は下向き）。
+        発火はライブラリを使わず IntersectionObserver で実装しています。</p>
+        <ul class="tags">
+          <li>CSS アニメーション</li><li>@keyframes</li><li>IntersectionObserver</li>
+          <li>clip-path</li><li>全画面メニュー</li><li>prefers-reduced-motion</li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="lp/">サイトを見る</a>
+        </div>
+      </li>
+
+    </ul>
+
+    <section class="check">
+      <h2>検証のしかた</h2>
+      <p>`.xd` ファイルは中身が ZIP と JSON なので、パースして全要素の座標・色・
+      フォントサイズ・行送り・字送りを数値で取り出しました。それをヘッドレス Chromium で
+      レンダリングした実装の <code>getBoundingClientRect()</code> と1項目ずつ突き合わせています。</p>
+      <table>
+        <caption>形状は許容 ±1px、文字のベースラインは ±3px（LP は OS 標準フォント指定のため）</caption>
+        <thead>
+          <tr><th>対象</th><th>検査項目</th><th>結果</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>コーポレートサイト（静的）</td><td class="num">122</td><td class="num">122 / 122 一致</td></tr>
+          <tr><td>WordPress テーマの出力</td><td class="num">122</td><td class="num">122 / 122 一致</td></tr>
+          <tr><td>ランディングページ</td><td class="num">141</td><td class="num">141 / 141 一致</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:18px">横方向は 320 / 360 / 375 / 414 / 600 / 768 / 900 / 960 /
+      <strong>1000</strong> / 1024 / 1100 / 1280 / 1400 / 1600 / 1920px で横スクロール 0 を確認。
+      1000px 付近は崩れの報告が最も多い幅なので必ず入れています。
+      実際、最初の実装ではここで 133px の横スクロールが出ていました。</p>
+      <p>カンプと指示書が食い違っていた6点（LPの背景ドット柄、リストの縦ピッチのばらつき、
+      見出し罫線の間隔、SPカードの文字溢れなど）は、カンプを正として実装し、
+      判断の理由を実装メモに残しています。</p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>今野 徳仁 ／ <a href="https://www.lancers.jp/profile/pantarhei">ランサーズのプロフィール</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

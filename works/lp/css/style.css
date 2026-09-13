@@ -517,6 +517,13 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 
 /* ---- 360px 未満のはみ出し防止 ---- */
+@media (max-width: 374px) {
+  /* 360px（Android に多い幅）では内容幅が 272px しかなく、本文16文字（281.6px）が
+     収まらない。この幅のときだけ余白を 22px にして3行構成を保つ。
+     カンプ幅の 375px 側は 28px のまま（カンプの 33px に近い方を優先）。 */
+  .ocard { padding-inline: 22px; }
+}
+
 @media (max-width: 359px) {
   .hero__title { font-size: 24px; line-height: 40px; }
   .btn-trial { font-size: 20px; }

@@ -16,6 +16,35 @@
   var closeBtn = document.getElementById('drawerClose');
   var lastFocus = null;
 
+  /* ---------- スクロールロック ----------
+     iOS Safari では body { overflow: hidden } が効かず背面が動いてしまう。
+     body を position:fixed にして、閉じたときに元の位置へ戻す。 */
+  var lockedY = 0;
+  var isLocked = false;
+
+  function lockScroll() {
+    if (isLocked) { return; }
+    isLocked = true;
+    lockedY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-lockedY) + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+
+  function unlockScroll() {
+    if (!isLocked) { return; }   // 閉じた状態で呼ばれても先頭へ飛ばさない
+    isLocked = false;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, lockedY);
+  }
+
+
   function openMenu() {
     lastFocus = document.activeElement;
     drawer.hidden = false;
@@ -25,7 +54,7 @@
     });
     burger.setAttribute('aria-expanded', 'true');
     burger.setAttribute('aria-label', 'メニューを閉じる');
-    document.body.style.overflow = 'hidden';
+    lockScroll();
     closeBtn.focus();
   }
 
@@ -33,7 +62,7 @@
     drawer.classList.remove('is-open');
     burger.setAttribute('aria-expanded', 'false');
     burger.setAttribute('aria-label', 'メニューを開く');
-    document.body.style.overflow = '';
+    unlockScroll();
     var done = function () { drawer.hidden = true; };
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       done();

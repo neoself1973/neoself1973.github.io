@@ -110,6 +110,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .drawer[hidden] { display: none; }
 .drawer.is-open { opacity: 1; }
+.drawer__nav { overscroll-behavior: contain; }
 
 .drawer__logo { position: absolute; left: 25px; top: 25px; }
 .drawer__logo .logo__mark { color: var(--c-white); }
@@ -249,6 +250,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .rcard--right { border-radius: 20px 0 0 20px; margin-left: auto; }
 
 .rcard__icon { flex: none; color: var(--c-text); }
+/* min-width:0 がないと、flex アイテムが中身の幅より縮まずカードからはみ出す。
+   360px 幅の Android で実際に 10px はみ出していた。 */
+.rcard__body { min-width: 0; }
 .rcard--left  .rcard__icon svg { width: 87px; height: 60px; }
 .rcard--right .rcard__icon svg { width: 51px; height: 60px; }
 .rcard__icon svg { fill: currentColor; }
@@ -440,6 +444,12 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
     height: 119px;
     gap: 30px;
   }
+  /* 375px 未満（360px の Android など）はアイコンと本文の間隔を詰める */
+  @media (max-width: 374px) {
+    .rcard { gap: 14px; }
+    .rcard--left  .rcard__icon svg { width: 70px; height: 48px; }
+    .rcard--right .rcard__icon svg { width: 41px; height: 48px; }
+  }
   .rcard--left  { border-radius: 0 20px 20px 0; margin-right: auto; }
   .rcard--right { border-radius: 20px 0 0 20px; margin-left: auto; }
   .rcard__body  { margin-top: 7px; }            /* カンプは中央より 3.5px 下 */
@@ -480,8 +490,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
     row-gap: 32px;                              /* 216 + 32 = 248 ピッチ */
   }
   /* カンプの左右余白は 33px だが、本文16文字（16px＋0.1em＝281.6px）が
-     277px に収まらない。余白だけ 30px にして、字送りと3行構成はカンプどおりに保つ。 */
-  .ocard { min-height: 216px; padding: 30.8px 30px 0; }
+     277px に収まらない。余白を 28px にして 287px 確保し、字送りと3行構成は
+     カンプどおりに保つ。30px（283px）だと余裕が 1.4px しかなく、
+     端末のフォントがわずかに広いだけで4行に折れる。 */
+  .ocard { min-height: 216px; padding: 30.8px 28px 0; }
   .ocard__title { font-size: 24px; line-height: 24px; }
   .ocard__en    { margin-top: 14.8px; font-size: 16px; line-height: 16px; }
   .ocard__text  { margin-top: 25.5px; }

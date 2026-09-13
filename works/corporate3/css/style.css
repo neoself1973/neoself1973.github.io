@@ -104,7 +104,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .backdrop {
   position: fixed;
   top: 0; left: var(--sidebar-w); right: 0;
+  /* iOS Safari の 100vh はアドレスバーを含んだ高さ。
+     dvh に対応した環境では表示中の高さに追従させる。 */
   height: 100vh;
+  height: 100dvh;
   z-index: -1;
   /* 差し替え用：ここに実写または <video> を置くと、固定背景の上を
      半透明のダークゾーンが流れる動きが出る。カンプは #DEDEDE のベタ。 */
@@ -370,7 +373,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
    ============================================================ */
 .totop {
   position: fixed;
-  right: 25px; bottom: 25px; z-index: 40;
+  z-index: 40;
+  /* 通常のブラウザでは env() が 0 を返すのでカンプどおり 25px。
+     ホーム画面に追加した場合だけホームインジケータ分ずれる。 */
+  right: calc(25px + env(safe-area-inset-right, 0px));
+  bottom: calc(25px + env(safe-area-inset-bottom, 0px));
   width: 50px; height: 50px;
   border: 1px solid var(--c-white);
   border-radius: 50%;

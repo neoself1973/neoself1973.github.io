@@ -13,11 +13,39 @@
   var hamburger = document.getElementById('hamburger');
   var drawer    = document.getElementById('drawer');
 
+  /* ---------- スクロールロック ----------
+     iOS Safari では body { overflow: hidden } が効かず背面が動いてしまう。
+     body を position:fixed にして、閉じたときに元の位置へ戻す。 */
+  var lockedY = 0;
+  var isLocked = false;
+
+  function lockScroll() {
+    if (isLocked) { return; }
+    isLocked = true;
+    lockedY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-lockedY) + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+
+  function unlockScroll() {
+    if (!isLocked) { return; }   // 閉じた状態で呼ばれても先頭へ飛ばさない
+    isLocked = false;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, lockedY);
+  }
+
   function setMenu(open) {
     sidebar.classList.toggle('is-open', open);
     hamburger.setAttribute('aria-expanded', String(open));
     hamburger.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) { lockScroll(); } else { unlockScroll(); }
   }
 
   if (hamburger && drawer) {
